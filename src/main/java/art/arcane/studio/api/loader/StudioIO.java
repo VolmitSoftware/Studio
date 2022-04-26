@@ -1,9 +1,8 @@
-package art.arcane.studio.loader;
+package art.arcane.studio.api.loader;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -58,8 +57,6 @@ public interface StudioIO<T> {
     File getLoadFolder();
 
     String getTypeDisplayName(boolean plural);
-
-    String getFolderName();
 
     boolean isText();
 }

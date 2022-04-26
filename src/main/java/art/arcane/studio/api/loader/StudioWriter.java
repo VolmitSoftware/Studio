@@ -1,4 +1,4 @@
-package art.arcane.studio.loader;
+package art.arcane.studio.api.loader;
 
 import java.io.File;
 import java.io.IOException;
