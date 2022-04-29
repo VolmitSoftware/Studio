@@ -4,6 +4,7 @@ import art.arcane.studio.api.loader.StudioIO;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,11 +14,36 @@ public class Repository
 {
     private final Map<String, StudioIO<?>> sectors;
     private final File folder;
+    private boolean registriesChanged;
 
     public Repository(File folder)
     {
         this.folder = folder;
         sectors = new ConcurrentHashMap<>();
+        registriesChanged = false;
+    }
+
+    public StudioIO<?> getSector(Class<?> type)
+    {
+        for(StudioIO<?> i : getSectors())
+        {
+            if(i.getLoadedClass().equals(type))
+            {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    public Collection<StudioIO<?>> getSectors()
+    {
+        return sectors.values();
+    }
+
+    public void dump()
+    {
+        sectors.values().forEach(StudioIO::dump);
     }
 
     public List<String> getPossibilities(String sector)
@@ -50,10 +76,15 @@ public class Repository
         return null;
     }
 
+    public boolean popRegistriesChangedState()
+    {
+        return registriesChanged = false;
+    }
+
     public void registerIOSector(StudioIO<?> io)
     {
-        sectors.put(io.getTypeDisplayName()
-                .toLowerCase(Locale.ROOT).trim().replaceAll("\\Q \\E", "-"), io);
+        sectors.put(io.getTypeName(), io);
+        registriesChanged = true;
     }
 
     public File getFolder()

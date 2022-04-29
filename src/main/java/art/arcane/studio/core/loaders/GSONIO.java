@@ -10,9 +10,26 @@ import java.io.IOException;
 
 public class GSONIO<T> extends CachedIO<T> {
     private static final Gson gson = new Gson();
+    private final Class<T> type;
 
-    public GSONIO(Class<T> type, File folder, String displayName, String displayNamePlural) {
-        super(new GSONReader<>(type), folder, "json", true, displayName, displayNamePlural);
+    public GSONIO(Class<T> type, File folder, String displayName) {
+        super(new GSONReader<>(type), folder, "json", true, displayName);
+        this.type = type;
+    }
+
+    @Override
+    public boolean isText() {
+        return true;
+    }
+
+    @Override
+    public boolean isJson() {
+        return true;
+    }
+
+    @Override
+    public Class<?> getLoadedClass() {
+        return type;
     }
     
     private static class GSONReader<T> implements StudioReader<T>{

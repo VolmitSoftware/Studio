@@ -1,6 +1,7 @@
 package art.arcane.studio.api.loader;
 
 import java.io.File;
+import java.util.Locale;
 
 public class DirectIO<T> implements StudioIO<T> {
     private final String extension;
@@ -8,14 +9,23 @@ public class DirectIO<T> implements StudioIO<T> {
     private final File folder;
     private final String displayName;
     private final boolean textual;
+    private final Class<T> type;
 
-    public DirectIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName)
+    public DirectIO(StudioReader<T> reader, Class<T> type, File folder, String extension, boolean textual, String displayName)
     {
+        this.type = type;
         this.extension = extension;
         this.reader = reader;
-        this.folder = folder;
+        this.folder = new File(folder, displayName
+                .toLowerCase(Locale.ROOT).trim().replaceAll("\\Q \\E", "-"));
         this.textual = textual;
         this.displayName = displayName;
+        folder.mkdirs();
+    }
+
+    @Override
+    public Class<?> getLoadedClass() {
+        return type;
     }
 
     @Override

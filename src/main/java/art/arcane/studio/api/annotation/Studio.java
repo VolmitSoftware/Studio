@@ -23,6 +23,15 @@ public interface Studio {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
+    @interface Object {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface AutoCompleteSector {
+        Class<?> value();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
     @interface Required {
 
     }

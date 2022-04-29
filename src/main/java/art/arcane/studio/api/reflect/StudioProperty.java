@@ -1,9 +1,11 @@
 package art.arcane.studio.api.reflect;
 
+import art.arcane.studio.api.StudioEngine;
 import art.arcane.studio.api.annotation.Studio;
 import lombok.Data;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 @Data
 public class StudioProperty {
@@ -18,8 +20,9 @@ public class StudioProperty {
     private Field field;
     private String name;
     private Class<?> type;
+    private List<String> possibilities;
 
-    public StudioProperty(Field field)
+    public StudioProperty(Field field, StudioEngine engine)
     {
         this.field = field;
         this.name = field.getName();
@@ -32,5 +35,7 @@ public class StudioProperty {
         this.listType = Studio.get(field, Studio.ListType.class).map(i -> i.value()).orElse(null);
         this.required = Studio.get(field, Studio.Required.class).map(i -> true).orElse(false);
         this.deprecated = Studio.get(field, Studio.Deprecated.class).map(i -> i.value()).orElse(null);
+        this.possibilities = Studio.get(field, Studio.AutoCompleteSector.class)
+                .map(i -> engine.getRepository().getSector(i.value()).getLoadPossibilities()).orElse(null);
     }
 }

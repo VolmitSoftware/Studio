@@ -26,10 +26,13 @@ public interface StudioIO<T> {
         }
     }
 
+    Class<?> getLoadedClass();
+
     default List<String> getLoadPossibilities()
     {
         URI p = getLoadFolder().toURI();
-        return getValidFiles().stream().map((e) -> p.relativize(e.toURI()).getPath()).toList();
+        String tn = getTypeName();
+        return getValidFiles().stream().map((e) -> tn + ":" + p.relativize(e.toURI()).getPath()).toList();
     }
 
     default List<File> getValidFiles()
@@ -43,7 +46,7 @@ public interface StudioIO<T> {
 
     default boolean isValidFile(File f)
     {
-        return f.getName().toLowerCase(Locale.ROOT).endsWith("." + getExtension().toLowerCase());
+        return f.getAbsolutePath().startsWith(getLoadFolder().getAbsolutePath()) && f.getName().toLowerCase(Locale.ROOT).endsWith("." + getExtension().toLowerCase());
     }
 
     StudioReader<T> getReader();
@@ -53,6 +56,11 @@ public interface StudioIO<T> {
     }
 
     default T load(String key) throws IOException {
+        if(key.contains(":"))
+        {
+            key = key.split("\\Q:\\E")[1];
+        }
+
         return load(new File(getLoadFolder(), key));
     }
 
@@ -60,5 +68,14 @@ public interface StudioIO<T> {
 
     String getTypeDisplayName();
 
+    default String getTypeName()
+    {
+        return getTypeDisplayName().toLowerCase(Locale.ROOT).trim().replaceAll("\\Q \\E", "-");
+    }
+
     boolean isText();
+    default boolean isJson()
+    {
+        return false;
+    }
 }
