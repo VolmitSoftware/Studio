@@ -1,4 +1,4 @@
-package art.arcane.studio.api;
+package art.arcane.studio.api.loader;
 
 import art.arcane.studio.api.loader.DirectIO;
 import art.arcane.studio.api.loader.StudioReader;
@@ -11,9 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CachedIO<T> extends DirectIO<T> {
     private final Map<File, T> cache;
 
-    public CachedIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName, String displayNamePlural) {
-        super(reader, folder, extension, textual, displayName, displayNamePlural);
+    public CachedIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName) {
+        super(reader, folder, extension, textual, displayName);
         cache = new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void dump()
+    {
+        cache.clear();
     }
 
     public T load(File file) throws IOException {

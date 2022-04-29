@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 public interface StudioIO<T> {
+    void dump();
+
     static void addFiles(StudioIO<?> io, File at, List<File> list)
     {
         if(at.isDirectory())
@@ -56,7 +58,7 @@ public interface StudioIO<T> {
 
     File getLoadFolder();
 
-    String getTypeDisplayName(boolean plural);
+    String getTypeDisplayName();
 
     boolean isText();
 }

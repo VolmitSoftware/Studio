@@ -7,17 +7,20 @@ public class DirectIO<T> implements StudioIO<T> {
     private final StudioReader<T> reader;
     private final File folder;
     private final String displayName;
-    private final String displayNamePlural;
     private final boolean textual;
 
-    public DirectIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName, String displayNamePlural)
+    public DirectIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName)
     {
         this.extension = extension;
         this.reader = reader;
         this.folder = folder;
         this.textual = textual;
         this.displayName = displayName;
-        this.displayNamePlural = displayNamePlural;
+    }
+
+    @Override
+    public void dump() {
+
     }
 
     @Override
@@ -36,8 +39,8 @@ public class DirectIO<T> implements StudioIO<T> {
     }
 
     @Override
-    public String getTypeDisplayName(boolean plural) {
-        return plural ? displayNamePlural : displayName;
+    public String getTypeDisplayName() {
+        return displayName;
     }
 
     @Override

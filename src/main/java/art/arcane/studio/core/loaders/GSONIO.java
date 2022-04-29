@@ -1,6 +1,6 @@
 package art.arcane.studio.core.loaders;
 
-import art.arcane.studio.api.CachedIO;
+import art.arcane.studio.api.loader.CachedIO;
 import art.arcane.studio.api.loader.StudioReader;
 import com.google.gson.Gson;
 

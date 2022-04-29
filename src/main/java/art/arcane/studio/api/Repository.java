@@ -1,4 +1,6 @@
-package art.arcane.studio.api.loader;
+package art.arcane.studio.api;
+
+import art.arcane.studio.api.loader.StudioIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +52,7 @@ public class Repository
 
     public void registerIOSector(StudioIO<?> io)
     {
-        sectors.put(io.getTypeDisplayName(false)
+        sectors.put(io.getTypeDisplayName()
                 .toLowerCase(Locale.ROOT).trim().replaceAll("\\Q \\E", "-"), io);
     }
 
