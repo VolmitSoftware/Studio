@@ -24,6 +24,7 @@ public interface Studio {
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface Object {
+        String value();
     }
 
     @Retention(RetentionPolicy.RUNTIME)

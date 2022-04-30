@@ -36,7 +36,7 @@ public class SchemaManager {
             return;
         }
 
-        StudioObject so = new StudioObject(c);
+        StudioObject so = new StudioObject(c, engine);
         objects.put(c, so);
 
         for(StudioProperty i : so.getProperties())

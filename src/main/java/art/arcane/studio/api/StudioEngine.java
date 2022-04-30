@@ -27,6 +27,7 @@ public class StudioEngine
         this.repository = new Repository(folder);
         this.watcher = new FolderWatcher(folder);
         this.schema = new SchemaManager(this);
+        registerJsonSectors();
         update(true);
     }
 
@@ -131,7 +132,8 @@ public class StudioEngine
     {
         JarScanner j = new JarScanner(jar, "");
         j.getClasses().parallelStream().filter(i -> i.isAnnotationPresent(Studio.Object.class)).forEach((i)
-                -> registerSector(new GSONIO<>(i, folder, i.getSimpleName())));
+                -> registerSector(new GSONIO<>(i, folder, Studio.get(i, Studio.Object.class).map(ix -> ix.value())
+                .orElse(i.getSimpleName()))));
     }
 
     public void registerSector(StudioIO<?> s)
