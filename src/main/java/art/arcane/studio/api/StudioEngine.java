@@ -11,7 +11,6 @@ import lombok.Data;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Data
 public class StudioEngine
@@ -27,7 +26,6 @@ public class StudioEngine
         this.repository = new Repository(folder);
         this.watcher = new FolderWatcher(folder);
         this.schema = new SchemaManager(this);
-        registerJsonSectors();
         update(true);
     }
 
