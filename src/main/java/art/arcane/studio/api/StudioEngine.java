@@ -6,9 +6,11 @@ import art.arcane.studio.api.io.JarScanner;
 import art.arcane.studio.api.loader.StudioIO;
 import art.arcane.studio.api.reflect.SchemaManager;
 import art.arcane.studio.core.loaders.GSONIO;
+import jdk.jfr.StackTrace;
 import lombok.Data;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ public class StudioEngine
         this.repository = new Repository(folder);
         this.watcher = new FolderWatcher(folder);
         this.schema = new SchemaManager(this);
+        registerJsonSectors();
         update(true);
     }
 
@@ -126,9 +129,55 @@ public class StudioEngine
         return null;
     }
 
+    public void registerJsonSectors()
+    {
+        try
+        {
+            throw new RuntimeException();
+        }
+
+        catch(Throwable e)
+        {
+            registerJsonSectors(e);
+        }
+    }
+
+    public void registerJsonSectors(Throwable s)
+    {
+        Set<File> f = new HashSet<>();
+
+        for(StackTraceElement i : s.getStackTrace())
+        {
+            try
+            {
+                f.add(new File(Class.forName(i.getClassName()).getProtectionDomain().getCodeSource().getLocation().getFile()));
+            }
+
+            catch(Throwable e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        for(File i : f)
+        {
+            registerJsonSectors(i);
+        }
+    }
+
+    public void registerJsonSectors(Class<?> jarPath)
+    {
+        registerJsonSectors(new File(jarPath.getProtectionDomain().getCodeSource().getLocation().getFile()));
+    }
+
     public void registerJsonSectors(File jar)
     {
         JarScanner j = new JarScanner(jar, "");
+        try {
+            j.scan();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         j.getClasses().parallelStream().filter(i -> i.isAnnotationPresent(Studio.Object.class)).forEach((i)
                 -> registerSector(new GSONIO<>(i, folder, Studio.get(i, Studio.Object.class).map(ix -> ix.value())
                 .orElse(i.getSimpleName()))));

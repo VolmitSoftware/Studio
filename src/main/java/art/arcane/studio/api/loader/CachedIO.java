@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CachedIO<T> extends DirectIO<T> {
     private final Map<File, T> cache;
 
-    public CachedIO(StudioReader<T> reader, File folder, String extension, boolean textual, String displayName) {
-        super(reader, folder, extension, textual, displayName);
+    public CachedIO(StudioReader<T> reader, Class<T> type, File folder, String extension, boolean textual, String displayName) {
+        super(reader, type, folder, extension, textual, displayName);
         cache = new ConcurrentHashMap<>();
     }
 

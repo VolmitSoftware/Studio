@@ -13,7 +13,7 @@ public class GSONIO<T> extends CachedIO<T> {
     private final Class<T> type;
 
     public GSONIO(Class<T> type, File folder, String displayName) {
-        super(new GSONReader<>(type), folder, "json", true, displayName);
+        super(new GSONReader<>(type), type, folder, "json", true, displayName);
         this.type = type;
     }
 

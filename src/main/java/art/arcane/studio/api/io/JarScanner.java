@@ -51,6 +51,13 @@ public class JarScanner {
      */
     public void scan() throws IOException {
         classes.clear();
+
+        if(jar.isDirectory())
+        {
+            scan(jar, jar);
+            return;
+        }
+
         FileInputStream fin = new FileInputStream(jar);
         ZipInputStream zip = new ZipInputStream(fin);
 
@@ -60,8 +67,7 @@ public class JarScanner {
                     continue;
                 }
 
-                String c = entry.getName().replaceAll("/", ".").replace(".class", "");
-
+                String c = entry.getName().replaceAll("\\Q/\\E", ".").replace(".class", "");
                 if(c.startsWith(superPackage)) {
                     try {
                         Class<?> clazz = Class.forName(c);
@@ -74,6 +80,33 @@ public class JarScanner {
         }
 
         zip.close();
+    }
+
+    private void scan(File root, File folder) {
+        if(folder.isDirectory())
+        {
+            for(File i : folder.listFiles())
+            {
+                scan(root, i);
+            }
+
+            return;
+        }
+
+        if(folder.getName().contains("$")) {
+            return;
+        }
+
+        String c = root.toPath().relativize(folder.toPath()).toString().replaceAll("/", ".").replace(".class", "");
+
+        if(c.startsWith(superPackage)) {
+            try {
+                Class<?> clazz = Class.forName(c);
+                classes.add(clazz);
+            } catch(ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
